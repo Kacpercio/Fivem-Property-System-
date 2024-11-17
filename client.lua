@@ -4,6 +4,7 @@ local todayTime2
 local timejeden
 local timedwa
 local getInput
+local inside = true
 
 Citizen.CreateThread(function()
     for k, conf in pairs(Config.Targets) do
@@ -33,6 +34,7 @@ Citizen.CreateThread(function()
                     canInteract = function()
                         if time2 >= todayTime2 - 86400 then
                             haveBought = true
+                             inside = false
                             return true
                         else 
                             haveBought = false
@@ -78,8 +80,11 @@ Citizen.CreateThread(function()
 
         local function insideZone()
             local playerPed = PlayerPedId()
-            SetEntityCoords(playerPed, Config.Exit[1], Config.Exit[2], Config.Exit[3])
-            SetEntityHeading(playerPed, Config.Exit[4])
+            if inside then
+                SetEntityCoords(playerPed, Config.Exit[1], Config.Exit[2], Config.Exit[3])
+                SetEntityHeading(playerPed, Config.Exit[4])
+                inside = false
+            end
         end
         
         lib.zones.box {
