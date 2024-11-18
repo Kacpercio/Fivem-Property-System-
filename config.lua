@@ -1,22 +1,6 @@
 Config = {}
 
 Config.Targets = {
-    --[[{
-        coords = vec3(266.55, -999.45, -99.01),
-        length = 0.2,
-        width = 2,
-        rotation = -90,
-        size = vec3(1.7, 1.6, 1.5),
-        name = "menuSocjalne",
-        debugPoly = false,
-        options = {
-            {
-                event = "MainCLMenu",
-                icon = "fa-solid fa-laptop",
-                label = "Otwórz Menu",
-            },
-        }
-    },]]--
     {
         coords = vector3(266.06, -1007.97, -100.90),
         length = 0.2,
