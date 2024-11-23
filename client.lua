@@ -4,7 +4,7 @@ local todayTime2
 local timejeden
 local timedwa
 local getInput
-local inside = true
+local loaded = true
 
 Citizen.CreateThread(function()
     for k, conf in pairs(Config.Targets) do
@@ -34,7 +34,7 @@ Citizen.CreateThread(function()
                     canInteract = function()
                         if time2 >= todayTime2 - 86400 then
                             haveBought = true
-                             inside = false
+                            loaded = false
                             return true
                         else 
                             haveBought = false
@@ -71,19 +71,24 @@ end)
 Citizen.CreateThread(function()
     RegisterNetEvent('esx:playerLoaded')
     AddEventHandler('esx:playerLoaded',function()
+        loaded = true
         ESX.TriggerServerCallback('getData', function(time)
-            time2 = time[1].time
+            if time[1].time then
+                time2 = time[1].time
+            end
         end)
         ESX.TriggerServerCallback('getTodayDate', function(todayTime)
-            todayTime2 = todayTime
+            if todayTime then
+                todayTime2 = todayTime
+            end
         end)
 
         local function insideZone()
-            local playerPed = PlayerPedId()
-            if inside then
+            if loaded then 
+                local playerPed = PlayerPedId()
                 SetEntityCoords(playerPed, Config.Exit[1], Config.Exit[2], Config.Exit[3])
                 SetEntityHeading(playerPed, Config.Exit[4])
-                inside = false
+                loaded = false
             end
         end
         
@@ -342,50 +347,3 @@ RegisterNetEvent("property:addClothes", function()
         menu.close()
     end)
 end)
-
---[[
-RegisterNetEvent('MainCLMenu')
-AddEventHandler('MainCLMenu', function(data)
-    ESX.TriggerServerCallback('getData2', function (Database)
-
-    lib.registerContext({
-
-    })
-
-    lib.registerContext({
-        id = 'MenuMain',
-        title = 'Menu Zarządzania',
-        options = {
-          {
-            title = 'Ulepszenie szafki',
-            description = 'Zwiększ wage oraz ilość slotów w szafce',
-            icon = 'house',
-            onSelect = function()
-                local alertPay = lib.alertDialog({
-                    header = 'Potwierdzenie',
-                    content = 'Czy na pewno chcesz ulepszyć szafkę?',
-                    centered = true,
-                    cancel = true
-                })
-                if alertPay == 'confirm' then 
-                    ESX.TriggerServerCallback('updateInventoryData', function() 
-                    end, 1)
-                end
-            end,
-            metadata = {
-              {label = 'Aktualny lvl szafki ', value = Database[1].lvl_szafki},
-            },
-          },
-          {
-            title = 'Ceny Szafek',
-            description = 'Sprawdź ceny poszczególnych lvl szafki',
-            icon = 'cart',
-            menu = ''
-          }
-        }
-      })
-
-    end)
-    lib.showContext('MenuMain')
-end)
-]]--
